@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALL GAMES FOR YOU</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #6a1b9a, #4a0072);
+    color: #fff;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+    background-image: url("bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    border-bottom: 2px solid black;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  header h1 {
+    font-size: 2em;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  .search-box {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 20px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 1em;
+  }
+
+  .profile img {
+    width: 60px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid white;
+    transition: transform 0.3s;
+  }
+
+  .profile img:hover {
+    transform: scale(1.1);
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .container {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 10px;
+    height: calc(100vh - 90px);
+    padding: 10px;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar {
+    background: #7b1fa2;
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: 0.3s;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 1.1em;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  .sidebar a:hover {
+    background: #9c27b0;
+    transform: translateX(8px);
+  }
+
+  .sidebar a.active {
+    background: #ba68c8;
+    font-weight: bold;
+  }
+
+  /* ---------- MAIN CONTENT ---------- */
+  .main {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  /* Featured Game Section */
+  .featured {
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    border-radius: 15px;
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .featured img {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .featured h2 {
+    margin-top: 10px;
+    font-size: 1.8em;
+  }
+
+  .featured p {
+    font-size: 1em;
+    color: #f3e5f5;
+  }
+
+  /* Game Grid */
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .game-card {
+    background: #8e24aa;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-card:hover {
+    background: #ba68c8;
+    transform: translateY(-5px);
+  }
+
+  .game-card img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .game-card h3 {
+    margin: 10px 0 5px;
+  }
+
+  .game-card p {
+    font-size: 0.9em;
+    color: #e1bee7;
+  }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+    .sidebar a {
+      flex-direction: column;
+      font-size: 0.9em;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>ALL GAMES FOR YOU</h1>
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Search games...">
+    </div>
+    <div class="profile">
+      <img src="C4T.gif" alt="C4T GIF">
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <h3>Categories</h3>
+      <a data-category="all" class="active">🌟 All</a>
+      <a data-category="fps">🎯 FPS</a>
+      <a data-category="adventure">⚔️ Adventure</a>
+      <a data-category="rpg">🧙‍♂️ RPG</a>
+      <a data-category="racing">🚗 Racing</a>
+      <a data-category="sports">🏟️ Sports</a>
+      <a data-category="arcade">👾 Arcade</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <section class="featured">
+       
+        <h2>🔥 Featured Game: Galaxy Blaster</h2>
+        <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
+      </section>
+
+      <section class="game-grid" id="gameGrid">
+        <!-- Example Game Cards -->
+        <div class="game-card" data-category="fps">
+          <img src="https://via.placeholder.com/220x150.png?text=FPS+Game" alt="FPS Game">
+          <h3>Battle Ops</h3>
+          <p>Intense multiplayer first-person action!</p>
+        </div>
+
+        <div class="game-card" data-category="adventure">
+          <img src="https://via.placeholder.com/220x150.png?text=Adventure" alt="Adventure Game">
+          <h3>Lost Jungle</h3>
+          <p>Explore mysterious lands and ancient ruins.</p>
+        </div>
+
+        <div class="game-card" data-category="rpg">
+          <img src="https://via.placeholder.com/220x150.png?text=RPG" alt="RPG Game">
+          <h3>Legends of Valor</h3>
+          <p>Build your hero, conquer quests, and gain glory.</p>
+        </div>
+
+        <div class="game-card" data-category="racing">
+          <img src="https://via.placeholder.com/220x150.png?text=Racing" alt="Racing Game">
+          <h3>Turbo Drift</h3>
+          <p>Fast cars, neon lights, and pure adrenaline.</p>
+        </div>
+
+        <div class="game-card" data-category="sports">
+          <img src="https://via.placeholder.com/220x150.png?text=Sports" alt="Sports Game">
+          <h3>Ultimate Soccer</h3>
+          <p>Lead your team to victory in world championships!</p>
+        </div>
+
+        <div class="game-card" data-category="arcade">
+          <img src="https://via.placeholder.com/220x150.png?text=Arcade" alt="Arcade Game">
+          <h3>Pixel Dash</h3>
+          <p>Retro fun with fast-paced levels!</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ---------- JAVASCRIPT ---------- -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const gameCards = document.querySelectorAll('.game-card');
+    const categoryLinks = document.querySelectorAll('.sidebar a');
+    const gameGrid = document.getElementById('gameGrid');
+
+    // SEARCH FUNCTIONALITY
+    searchInput.addEventListener('input', () => {
+      const searchValue = searchInput.value.toLowerCase();
+      gameCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = title.includes(searchValue) ? 'block' : 'none';
+      });
+    });
+
+    // CATEGORY FILTER FUNCTIONALITY
+    categoryLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // Remove active state
+        categoryLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        const category = link.getAttribute('data-category');
+        gameCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
