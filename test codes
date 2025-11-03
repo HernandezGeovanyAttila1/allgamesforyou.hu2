@@ -12,17 +12,17 @@
   body {
     margin: 0;
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #6a1b9a; /* purple background */
+    background-color: #6a1b9a;
     color: white;
   }
 
-  /* Grid Layout */
+  /* Layout Grid */
   .container {
     display: grid;
     grid-template-areas:
       "header header profile"
       "sidebar main main";
-    grid-template-columns: 200px 1fr 120px;
+    grid-template-columns: 220px 1fr 150px;
     grid-template-rows: 100px 1fr;
     gap: 10px;
     height: 100vh;
@@ -37,9 +37,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
+    font-size: 2.3em;
     font-weight: bold;
     letter-spacing: 3px;
+    text-shadow: 2px 2px 5px black;
   }
 
   /* Profile Box */
@@ -56,37 +57,80 @@
   /* Sidebar */
   .sidebar {
     grid-area: sidebar;
-    background-color: #8e24aa;
+    background-color: #7b1fa2;
     border: 2px solid black;
     padding: 20px;
+  }
+
+  .sidebar h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid white;
   }
 
   .sidebar a {
     display: block;
     text-decoration: none;
     color: white;
-    margin: 15px 0;
+    margin: 12px 0;
     font-size: 1.1em;
     transition: 0.3s;
   }
 
   .sidebar a:hover {
     color: #ffeb3b;
+    transform: translateX(5px);
   }
 
-  /* Main Content */
+  /* Main Area */
   .main {
     grid-area: main;
     background-color: #8e24aa;
     border: 2px solid black;
     padding: 20px;
+    overflow-y: auto;
   }
 
-  .game-card {
+  .featured {
     background-color: #ab47bc;
     border-radius: 10px;
     padding: 15px;
     text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .featured img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .featured h2 {
+    margin: 15px 0 5px;
+  }
+
+  .featured p {
+    font-size: 1em;
+    color: #f3e5f5;
+  }
+
+  /* Game Grid */
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+  }
+
+  .game-card {
+    background-color: #9c27b0;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    transition: 0.3s;
+  }
+
+  .game-card:hover {
+    background-color: #ba68c8;
+    transform: scale(1.05);
   }
 
   .game-card img {
@@ -94,33 +138,26 @@
     border-radius: 10px;
   }
 
-  .game-card h2 {
-    margin: 15px 0 10px;
+  .game-card h3 {
+    margin: 10px 0 5px;
   }
 
   .game-card p {
-    font-size: 1em;
+    font-size: 0.9em;
+    color: #f3e5f5;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #4a0072;
+    border-radius: 5px;
   }
 </style>
 </head>
 <body>
   <div class="container">
     <div class="header">ALL GAMES FOR YOU</div>
-    <div class="profile">😊</div>
-    <div class="sidebar">
-      <a href="#">🏠 Home</a>
-      <a href="#">🎮 Games</a>
-      <a href="#">⭐ Favorites</a>
-      <a href="#">⚙️ Settings</a>
-      <a href="#">📞 Contact</a>
-    </div>
-    <div class="main">
-      <div class="game-card">
-        <img src="https://via.placeholder.com/600x300.png?text=Game+Preview" alt="Game Preview">
-        <h2>Featured Game</h2>
-        <p>Explore an amazing adventure full of challenges and rewards!</p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+    <div class="profile">😊</div
