@@ -99,11 +99,17 @@
     padding: 8px 12px;
     border-radius: 8px;
     transition: 0.3s;
+    cursor: pointer;
   }
 
   .sidebar a:hover {
     background: #9c27b0;
     transform: translateX(8px);
+  }
+
+  .sidebar a.active {
+    background: #ba68c8;
+    font-weight: bold;
   }
 
   /* ---------- MAIN CONTENT ---------- */
@@ -205,7 +211,7 @@
   <header>
     <h1>ALL GAMES FOR YOU</h1>
     <div class="search-box">
-      <input type="text" placeholder="Search games...">
+      <input id="searchInput" type="text" placeholder="Search games...">
     </div>
     <div class="profile">
       <img src="C4T.gif" alt="C4T GIF">
@@ -217,12 +223,13 @@
     <!-- SIDEBAR -->
     <nav class="sidebar">
       <h3>Categories</h3>
-      <a href="#">🎯 FPS</a>
-      <a href="#">⚔️ Adventure</a>
-      <a href="#">🧙‍♂️ RPG</a>
-      <a href="#">🚗 Racing</a>
-      <a href="#">🏟️ Sports</a>
-      <a href="#">👾 Arcade</a>
+      <a data-category="all" class="active">🌟 All</a>
+      <a data-category="fps">🎯 FPS</a>
+      <a data-category="adventure">⚔️ Adventure</a>
+      <a data-category="rpg">🧙‍♂️ RPG</a>
+      <a data-category="racing">🚗 Racing</a>
+      <a data-category="sports">🏟️ Sports</a>
+      <a data-category="arcade">👾 Arcade</a>
     </nav>
 
     <!-- MAIN CONTENT -->
@@ -233,38 +240,39 @@
         <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
       </section>
 
-      <section class="game-grid">
-        <div class="game-card">
+      <section class="game-grid" id="gameGrid">
+        <!-- Example Game Cards -->
+        <div class="game-card" data-category="fps">
           <img src="https://via.placeholder.com/220x150.png?text=FPS+Game" alt="FPS Game">
           <h3>Battle Ops</h3>
           <p>Intense multiplayer first-person action!</p>
         </div>
 
-        <div class="game-card">
+        <div class="game-card" data-category="adventure">
           <img src="https://via.placeholder.com/220x150.png?text=Adventure" alt="Adventure Game">
           <h3>Lost Jungle</h3>
           <p>Explore mysterious lands and ancient ruins.</p>
         </div>
 
-        <div class="game-card">
+        <div class="game-card" data-category="rpg">
           <img src="https://via.placeholder.com/220x150.png?text=RPG" alt="RPG Game">
           <h3>Legends of Valor</h3>
           <p>Build your hero, conquer quests, and gain glory.</p>
         </div>
 
-        <div class="game-card">
+        <div class="game-card" data-category="racing">
           <img src="https://via.placeholder.com/220x150.png?text=Racing" alt="Racing Game">
           <h3>Turbo Drift</h3>
           <p>Fast cars, neon lights, and pure adrenaline.</p>
         </div>
 
-        <div class="game-card">
+        <div class="game-card" data-category="sports">
           <img src="https://via.placeholder.com/220x150.png?text=Sports" alt="Sports Game">
           <h3>Ultimate Soccer</h3>
           <p>Lead your team to victory in world championships!</p>
         </div>
 
-        <div class="game-card">
+        <div class="game-card" data-category="arcade">
           <img src="https://via.placeholder.com/220x150.png?text=Arcade" alt="Arcade Game">
           <h3>Pixel Dash</h3>
           <p>Retro fun with fast-paced levels!</p>
@@ -272,5 +280,40 @@
       </section>
     </main>
   </div>
+
+  <!-- ---------- JAVASCRIPT ---------- -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const gameCards = document.querySelectorAll('.game-card');
+    const categoryLinks = document.querySelectorAll('.sidebar a');
+    const gameGrid = document.getElementById('gameGrid');
+
+    // SEARCH FUNCTIONALITY
+    searchInput.addEventListener('input', () => {
+      const searchValue = searchInput.value.toLowerCase();
+      gameCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = title.includes(searchValue) ? 'block' : 'none';
+      });
+    });
+
+    // CATEGORY FILTER FUNCTIONALITY
+    categoryLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // Remove active state
+        categoryLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        const category = link.getAttribute('data-category');
+        gameCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
