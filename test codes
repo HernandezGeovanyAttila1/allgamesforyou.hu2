@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All Games For You</title>
+<title>ALL GAMES FOR YOU</title>
 <style>
   * {
     box-sizing: border-box;
@@ -11,92 +11,117 @@
 
   body {
     margin: 0;
-    font-family: 'Trebuchet MS', sans-serif;
-    background-color: #6a1b9a;
-    color: white;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #6a1b9a, #4a0072);
+    color: #fff;
   }
 
-  /* Layout Grid */
+  /* ---------- HEADER ---------- */
+  header {
+    background: #8e24aa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    border-bottom: 2px solid black;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  header h1 {
+    font-size: 2em;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  .search-box {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 20px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 1em;
+  }
+
+  .profile {
+    font-size: 2em;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .profile:hover {
+    transform: rotate(10deg) scale(1.1);
+  }
+
+  /* ---------- LAYOUT ---------- */
   .container {
     display: grid;
-    grid-template-areas:
-      "header header profile"
-      "sidebar main main";
-    grid-template-columns: 220px 1fr 150px;
-    grid-template-rows: 100px 1fr;
+    grid-template-columns: 220px 1fr;
     gap: 10px;
-    height: 100vh;
+    height: calc(100vh - 80px);
     padding: 10px;
   }
 
-  /* Header */
-  .header {
-    grid-area: header;
-    background-color: #8e24aa;
-    border: 2px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.3em;
-    font-weight: bold;
-    letter-spacing: 3px;
-    text-shadow: 2px 2px 5px black;
-  }
-
-  /* Profile Box */
-  .profile {
-    grid-area: profile;
-    background-color: #9c27b0;
-    border: 2px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2em;
-  }
-
-  /* Sidebar */
+  /* ---------- SIDEBAR ---------- */
   .sidebar {
-    grid-area: sidebar;
-    background-color: #7b1fa2;
+    background: #7b1fa2;
     border: 2px solid black;
+    border-radius: 10px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: 0.3s;
   }
 
   .sidebar h3 {
     text-align: center;
-    margin-bottom: 15px;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
   }
 
   .sidebar a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     text-decoration: none;
     color: white;
-    margin: 12px 0;
     font-size: 1.1em;
+    padding: 8px 12px;
+    border-radius: 8px;
     transition: 0.3s;
   }
 
   .sidebar a:hover {
-    color: #ffeb3b;
-    transform: translateX(5px);
+    background: #9c27b0;
+    transform: translateX(8px);
   }
 
-  /* Main Area */
+  /* ---------- MAIN CONTENT ---------- */
   .main {
-    grid-area: main;
-    background-color: #8e24aa;
+    background: rgba(255, 255, 255, 0.05);
     border: 2px solid black;
+    border-radius: 10px;
     padding: 20px;
     overflow-y: auto;
   }
 
+  /* Featured Game Section */
   .featured {
-    background-color: #ab47bc;
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
     border-radius: 10px;
-    padding: 15px;
     text-align: center;
-    margin-bottom: 20px;
+    padding: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-in-out;
   }
 
   .featured img {
@@ -105,7 +130,8 @@
   }
 
   .featured h2 {
-    margin: 15px 0 5px;
+    margin-top: 10px;
+    font-size: 1.8em;
   }
 
   .featured p {
@@ -117,20 +143,21 @@
   .game-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 15px;
+    gap: 20px;
   }
 
   .game-card {
-    background-color: #9c27b0;
+    background: #8e24aa;
     border-radius: 10px;
-    text-align: center;
     padding: 10px;
+    text-align: center;
     transition: 0.3s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   }
 
   .game-card:hover {
-    background-color: #ba68c8;
-    transform: scale(1.05);
+    background: #ba68c8;
+    transform: translateY(-5px);
   }
 
   .game-card img {
@@ -144,20 +171,100 @@
 
   .game-card p {
     font-size: 0.9em;
-    color: #f3e5f5;
+    color: #e1bee7;
   }
 
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 10px;
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  ::-webkit-scrollbar-thumb {
-    background: #4a0072;
-    border-radius: 5px;
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+    .sidebar a {
+      flex-direction: column;
+      font-size: 0.9em;
+    }
   }
 </style>
 </head>
 <body>
+  <!-- HEADER -->
+  <header>
+    <h1>ALL GAMES FOR YOU</h1>
+    <div class="search-box">
+      <input type="text" placeholder="Search games...">
+    </div>
+    <div class="profile">😊</div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
   <div class="container">
-    <div class="header">ALL GAMES FOR YOU</div>
-    <div class="profile">😊</div
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <h3>Categories</h3>
+      <a href="#">🎯 FPS</a>
+      <a href="#">⚔️ Adventure</a>
+      <a href="#">🧙‍♂️ RPG</a>
+      <a href="#">🚗 Racing</a>
+      <a href="#">🏟️ Sports</a>
+      <a href="#">👾 Arcade</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <section class="featured">
+        <img src="https://via.placeholder.com/900x350.png?text=Featured+Game" alt="Featured Game">
+        <h2>🔥 Featured Game: Galaxy Blaster</h2>
+        <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
+      </section>
+
+      <section class="game-grid">
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=FPS+Game" alt="FPS Game">
+          <h3>Battle Ops</h3>
+          <p>Intense multiplayer first-person action!</p>
+        </div>
+
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=Adventure" alt="Adventure Game">
+          <h3>Lost Jungle</h3>
+          <p>Explore mysterious lands and ancient ruins.</p>
+        </div>
+
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=RPG" alt="RPG Game">
+          <h3>Legends of Valor</h3>
+          <p>Build your hero, conquer quests, and gain glory.</p>
+        </div>
+
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=Racing" alt="Racing Game">
+          <h3>Turbo Drift</h3>
+          <p>Fast cars, neon lights, and pure adrenaline.</p>
+        </div>
+
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=Sports" alt="Sports Game">
+          <h3>Ultimate Soccer</h3>
+          <p>Lead your team to victory in world championships!</p>
+        </div>
+
+        <div class="game-card">
+          <img src="https://via.placeholder.com/220x150.png?text=Arcade" alt="Arcade Game">
+          <h3>Pixel Dash</h3>
+          <p>Retro fun with fast-paced levels!</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
