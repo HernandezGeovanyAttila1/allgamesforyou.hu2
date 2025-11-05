@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="icon" type="image/png" sizes="128x128" href="imgandgifs/logot.png">
 <title>ALL GAMES FOR YOU</title>
 <style>
   * {
@@ -14,6 +15,10 @@
     font-family: "Poppins", sans-serif;
     background: linear-gradient(180deg, #6a1b9a, #4a0072);
     color: #fff;
+  }
+  .logo{
+    width: 300px;
+    height: auto;
   }
 
   /* ---------- HEADER ---------- */
@@ -212,12 +217,13 @@
 <body>
   <!-- HEADER -->
   <header>
-    <h1>ALL GAMES FOR YOU</h1>
+    <img src = "imgandgifs/allgames4u_logo.png" alt="logo" class="logo"></img>
+    
     <div class="search-box">
       <input id="searchInput" type="text" placeholder="Search games...">
     </div>
     <div class="profile">
-      <img src="C4T.gif" alt="C4T GIF">
+      <img src="imgandgifs/login.png" alt="C4T GIF">
     </div>
   </header>
 
