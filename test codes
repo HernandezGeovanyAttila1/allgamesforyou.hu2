@@ -220,7 +220,7 @@
       <img src="C4T.gif" alt="C4T GIF">
     </div>
   </header>
-
+ <img src = "imgandgifs/allgames4u_logo.png" alt="logo" class="logo"></img>
   <!-- MAIN CONTAINER -->
   <div class="container">
     <!-- SIDEBAR -->
