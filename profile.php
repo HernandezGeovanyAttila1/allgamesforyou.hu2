@@ -1,7 +1,8 @@
 <?php
+ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/tmp'));
 session_start();
 
-// Redirect to login if not logged in
+// Redirect if not logged in
 if(!isset($_SESSION['user_id'])){
     header("Location: auth.php");
     exit();
@@ -9,8 +10,8 @@ if(!isset($_SESSION['user_id'])){
 
 // Database connection
 $servername = "localhost";
-$db_username = "skdneoaa_yourusername"; // replace with your cPanel DB username
-$db_password = "your_password";         // replace with your DB password
+$db_username = "skdneoaa"; // change this
+$db_password = "t3YnVb0HN**40f";         // change this
 $database = "skdneoaa_Felhasznalok";
 
 $conn = new mysqli($servername, $db_username, $db_password, $database);
@@ -22,30 +23,38 @@ $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 
-// Fetch user comments
-$comments_sql = "SELECT c.content, c.created_at, g.title AS game_title
-                 FROM comments c
-                 JOIN games g ON c.game_id = g.game_id
-                 WHERE c.user_id = ?
-                 ORDER BY c.created_at DESC";
-$stmt = $conn->prepare($comments_sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$comments_result = $stmt->get_result();
+// Handle profile picture upload
+if(isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK){
+    $upload_dir = "uploads/";
+    $file_tmp = $_FILES['profile_pic']['tmp_name'];
+    $file_name = basename($_FILES['profile_pic']['name']);
+    $target_path = $upload_dir . uniqid() . "_" . $file_name;
 
-// Fetch user-uploaded games (optional)
-$games_sql = "SELECT title, main_image, description FROM games WHERE user_id=?";
-$stmt2 = $conn->prepare($games_sql);
-$stmt2->bind_param("i", $user_id);
-$stmt2->execute();
-$user_games = $stmt2->get_result();
+    $allowed = ['jpg','jpeg','png','gif'];
+    $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    if(in_array($ext, $allowed)){
+        if(move_uploaded_file($file_tmp, $target_path)){
+            $update = $conn->prepare("UPDATE users SET profile_img=? WHERE user_id=?");
+            $update->bind_param("si", $target_path, $user_id);
+            $update->execute();
+            $_SESSION['profile_img'] = $target_path;
+        }
+    }
+}
 
-// Fetch user-uploaded images (optional)
-$images_sql = "SELECT img_path, description FROM images WHERE user_id=?";
-$stmt3 = $conn->prepare($images_sql);
-$stmt3->bind_param("i", $user_id);
-$stmt3->execute();
-$user_images = $stmt3->get_result();
+// Get updated user info
+$user_query = $conn->prepare("SELECT username, role, profile_img FROM users WHERE user_id=?");
+$user_query->bind_param("i", $user_id);
+$user_query->execute();
+$user_result = $user_query->get_result();
+$user_data = $user_result->fetch_assoc();
+$profile_img = $user_data['profile_img'] ?? "imgandgifs/login.png";
+
+// Get user's comments
+$comments_query = $conn->prepare("SELECT c.content, c.created_at, g.title FROM comments c JOIN games g ON c.game_id=g.game_id WHERE c.user_id=? ORDER BY c.created_at DESC");
+$comments_query->bind_param("i", $user_id);
+$comments_query->execute();
+$comments = $comments_query->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,80 +62,96 @@ $user_images = $stmt3->get_result();
 <meta charset="UTF-8">
 <title><?php echo htmlspecialchars($username); ?>'s Profile</title>
 <style>
-body { font-family: Poppins, sans-serif; margin:0; background: linear-gradient(180deg,#6a1b9a,#4a0072); color:#fff; }
-header { display:flex; justify-content:space-between; align-items:center; padding:15px 30px; background:#4a0072; }
-header a { color:white; text-decoration:none; margin-left:15px; }
-.profile-container { max-width:900px; margin:30px auto; background:rgba(0,0,0,0.3); padding:20px; border-radius:15px; }
-h2,h3 { margin-top:0; }
-.comment, .user-game, .user-image { background:#f7f7f7; color:black; padding:10px; border-radius:8px; margin-bottom:10px; }
-.user-game img, .user-image img { width:100%; max-width:250px; border-radius:10px; }
-section { margin-bottom:30px; }
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #6a1b9a, #4a0072);
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4a0072;
+  padding: 15px 30px;
+}
+header a { color: white; text-decoration: none; margin-left: 15px; }
+.profile-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  text-align: center;
+}
+.profile-container img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+input[type="file"] {
+  margin-top: 10px;
+  color: white;
+}
+button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  background: #9c27b0;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover { background: #ba68c8; }
+.comment {
+  background: rgba(255,255,255,0.2);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  text-align: left;
+}
 </style>
 </head>
 <body>
 
 <header>
-    <img src="imgandgifs/C4T.png" alt="logo" style="width:200px;">
-    <div>
-        <a href="index.php">Home</a>
-        <a href="?action=logout">Logout</a>
-    </div>
+  <img src="imgandgifs/C4T.png" alt="logo" style="width:200px;">
+  <div>
+    <a href="index.php">🏠 Home</a>
+    <a href="auth.php?action=logout">🚪 Logout</a>
+  </div>
 </header>
 
 <div class="profile-container">
-    <h2><?php echo htmlspecialchars($username); ?>'s Profile</h2>
-    <p><strong>Role:</strong> <?php echo htmlspecialchars($role); ?></p>
+  <h2><?php echo htmlspecialchars($username); ?>'s Profile</h2>
+  <p><strong>Role:</strong> <?php echo htmlspecialchars($role); ?></p>
 
-    <!-- USER COMMENTS -->
-    <section>
-        <h3>Your Comments</h3>
-        <?php
-        if($comments_result->num_rows > 0){
-            while($comment = $comments_result->fetch_assoc()){
-                $ccontent = htmlspecialchars($comment['content']);
-                $ctime = htmlspecialchars($comment['created_at']);
-                $cgame = htmlspecialchars($comment['game_title']);
-                echo "<div class='comment'><strong>Game: $cgame</strong><br>$ccontent<br><small>$ctime</small></div>";
-            }
-        } else {
-            echo "<p>No comments yet.</p>";
-        }
-        ?>
-    </section>
+  <!-- Profile picture -->
+  <form method="POST" enctype="multipart/form-data">
+    <img src="<?php echo htmlspecialchars($profile_img); ?>" alt="Profile Picture"><br>
+    <input type="file" name="profile_pic" accept="image/*">
+    <button type="submit">Update Profile Picture</button>
+  </form>
 
-    <!-- USER GAMES -->
-    <section>
-        <h3>Your Uploaded Games</h3>
-        <?php
-        if($user_games->num_rows > 0){
-            while($game = $user_games->fetch_assoc()){
-                $title = htmlspecialchars($game['title']);
-                $desc = htmlspecialchars($game['description']);
-                $img = htmlspecialchars($game['main_image']);
-                echo "<div class='user-game'><h4>$title</h4><img src='$img' alt='$title'><p>$desc</p></div>";
-            }
-        } else {
-            echo "<p>No games uploaded.</p>";
-        }
-        ?>
-    </section>
+  <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.3);">
 
-    <!-- USER IMAGES -->
-    <section>
-        <h3>Your Uploaded Images</h3>
-        <?php
-        if($user_images->num_rows > 0){
-            while($img = $user_images->fetch_assoc()){
-                $path = htmlspecialchars($img['img_path']);
-                $desc = htmlspecialchars($img['description']);
-                echo "<div class='user-image'><img src='$path' alt='User Image'><p>$desc</p></div>";
-            }
-        } else {
-            echo "<p>No images uploaded.</p>";
-        }
-        ?>
-    </section>
-
+  <h3>Your Comments</h3>
+  <?php if($comments->num_rows > 0): ?>
+    <?php while($row = $comments->fetch_assoc()): ?>
+      <div class="comment">
+        <strong><?php echo htmlspecialchars($row['title']); ?></strong><br>
+        <?php echo htmlspecialchars($row['content']); ?><br>
+        <small><?php echo htmlspecialchars($row['created_at']); ?></small>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No comments yet.</p>
+  <?php endif; ?>
 </div>
 
 </body>
