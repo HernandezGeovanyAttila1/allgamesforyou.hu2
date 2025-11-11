@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // ------------------ START SESSION ------------------
+ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/tmp'));
 session_start();
 
 // ------------------ DATABASE CONNECTION ------------------
@@ -84,12 +85,14 @@ form button:hover { background:#0056b3; }
     <input id="searchInput" type="text" placeholder="Search games...">
   </div>
   <div class="profile">
+  <?php if(isset($_SESSION['user_id'])): ?>
+    <a href="profile.php">
+      <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'imgandgifs/login.png'); ?>" alt="profile">
+    </a>
+  <?php else: ?>
     <a href="auth.php"><img src="imgandgifs/login.png" alt="login"></a>
-    <?php if(isset($_SESSION['user_id'])): ?>
-        <span style="margin-left:10px;">👤 <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-        <a href="?action=logout"><img src="imgandgifs/logout.png" alt="logout" style="margin-left:5px;"></a>
-    <?php endif; ?>
-  </div>
+  <?php endif; ?>
+</div>
 </header>
 
 <div class="container">
