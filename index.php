@@ -111,6 +111,33 @@ form button:hover { background:#0056b3; }
     <a data-category="racing">🚗 Racing</a>
     <a data-category="sports">🏟️ Sports</a>
     <a data-category="arcade">👾 Arcade</a>
+    <a data-category="platform">👾 Platform games</a>
+    <a data-category="shooter">👾 Shooter games</a>
+    <a data-category="fighting">👾 Fighting games</a>
+    <a data-category="stealth">👾 Stealth games</a>
+    <a data-category="survival">👾 Survival games</a>
+    <a data-category="rhythm">👾 Rhythm games</a>
+    <a data-category="battleroyal">👾 Battle Royale games</a>
+    <a data-category="puzzle">👾 Puzzle games</a>
+    <a data-category="logical">👾 Logical game</a>
+    <a data-category="crpg">👾 CRPG</a>
+    <a data-category="mmorpg">👾 MMORPG</a>
+    <a data-category="roguelikes">👾 Roguelikes</a>
+    <a data-category="sandbox rpg">👾 Sandbox RPG</a>
+    <a data-category="simulation">👾 Simulation</a>
+    <a data-category="vehiclesimulation">👾 Vehicle simulation</a>
+    <a data-category="strategy">👾 Strategy</a>
+    <a data-category="moba">👾 Multiplayer online battle arena (MOBA)</a>
+    <a data-category=" towerdefense">👾 Tower defense</a>
+    <a data-category="wargame">👾 Wargame</a>
+    <a data-category="competitive">👾 Competitive</a>
+    <a data-category="boardgame">👾 Board game</a>
+    <a data-category="casinogame">👾 Casino game</a>
+    <a data-category="gachagame">👾 Gacha game</a>
+    <a data-category="horrorgame">👾 Horror game</a>
+    <a data-category="idlegame">👾 Idle game</a>
+    <a data-category="partygame">👾 Party game</a>
+    <a data-category="sandbox">👾 Sandbox</a>
   </nav>
 
   <main class="main">
