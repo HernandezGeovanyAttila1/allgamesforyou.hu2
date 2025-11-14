@@ -53,7 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['comment_submit']) && 
 <style>
 /* ---------- CSS ---------- */
 body { margin:0; font-family:Poppins,sans-serif; background:linear-gradient(180deg,#6a1b9a,#4a0072); color:#fff; }
-header { display:flex; justify-content:space-between; align-items:center; padding:15px 30px; background:#4a0072; }
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 30px;  background-image: url("imgandgifs/header_bg.png");background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center; }
 .logo { width:300px; height:auto; }
 .search-box input { padding:10px; border-radius:20px; border:none; }
 .profile img { width:60px; border-radius:50%; cursor:pointer; }
@@ -74,6 +78,8 @@ header { display:flex; justify-content:space-between; align-items:center; paddin
 form textarea { width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; }
 form button { padding:5px 10px; border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer; }
 form button:hover { background:#0056b3; }
+.add-game-btn { padding:8px 12px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:15px; display:inline-block; text-decoration:none; }
+.add-game-btn:hover { background:#fb8c00; }
 </style>
 </head>
 <body>
@@ -108,6 +114,10 @@ form button:hover { background:#0056b3; }
   </nav>
 
   <main class="main">
+    <?php if(isset($_SESSION['user_id'])): ?>
+        <a href="add_games.php" class="add-game-btn">➕ Add New Game</a>
+    <?php endif; ?>
+
     <section class="featured">
       <h2>🔥 Featured Game: Galaxy Blaster</h2>
       <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
@@ -125,35 +135,13 @@ form button:hover { background:#0056b3; }
                 $img = htmlspecialchars($game['main_image']);
                 $game_id = $game['game_id'];
 
+                // Make game clickable
                 echo "<div class='game-card' data-category='{$category}'>";
+                echo "<a href='game.php?id={$game_id}' style='text-decoration:none;color:inherit;'>";
                 echo "<img src='{$img}' alt='{$title}'>";
                 echo "<h3>{$title}</h3>";
                 echo "<p>{$desc}</p>";
-
-                // Comments
-                $comments_sql = "SELECT c.content, u.username, c.created_at 
-                                 FROM comments c 
-                                 JOIN users u ON c.user_id = u.user_id 
-                                 WHERE c.game_id = $game_id 
-                                 ORDER BY c.created_at DESC";
-                if($comments_result = $conn->query($comments_sql)){
-                    while($comment = $comments_result->fetch_assoc()){
-                        $cuser = htmlspecialchars($comment['username']);
-                        $ccontent = htmlspecialchars($comment['content']);
-                        $ctime = htmlspecialchars($comment['created_at']);
-                        echo "<div class='comment'><strong>{$cuser}:</strong> {$ccontent}<br><small><i>{$ctime}</i></small></div>";
-                    }
-                }
-
-                // Comment form if logged in
-                if(isset($_SESSION['user_id'])){
-                    echo "<form method='POST'>
-                            <input type='hidden' name='game_id' value='{$game_id}'>
-                            <textarea name='content' rows='2' placeholder='Write a comment...' required></textarea><br>
-                            <button type='submit' name='comment_submit'>Post Comment</button>
-                          </form>";
-                }
-
+                echo "</a>";
                 echo "</div>";
             }
         } else { echo "<p>No games found.</p>"; }
