@@ -10,9 +10,9 @@ session_start();
 
 // ------------------ DATABASE CONNECTION ------------------
 $servername = "localhost";
-$db_username = "skdneoaa"; // <-- replace with your cPanel DB username
-$db_password = "t3YnVb0HN**40f";         // <-- replace with your MySQL password
-$database = "skdneoaa_Felhasznalok";    // <-- your DB name
+$db_username = "skdneoaa";
+$db_password = "t3YnVb0HN**40f";
+$database = "skdneoaa_Felhasznalok";
 
 $conn = new mysqli($servername, $db_username, $db_password, $database);
 if ($conn->connect_error) {
@@ -42,6 +42,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['comment_submit']) && 
         }
     }
 }
+
+// ------------------ FETCH GAMES WITH CATEGORIES ------------------
+$games = [];
+$games_sql = "SELECT g.*, GROUP_CONCAT(gc.category SEPARATOR ',') AS categories
+              FROM games g
+              LEFT JOIN game_categories gc ON g.game_id = gc.game_id
+              GROUP BY g.game_id";
+if ($result = $conn->query($games_sql)) {
+    while ($row = $result->fetch_assoc()) {
+        $games[] = $row;
+    }
+} else {
+    die("Error fetching games: " . $conn->error);
+}
+
+// ------------------ FETCH ALL CATEGORIES ------------------
+$categories = [];
+$cat_sql = "SELECT DISTINCT category FROM game_categories ORDER BY category ASC";
+if ($cat_result = $conn->query($cat_sql)) {
+    while ($cat = $cat_result->fetch_assoc()) {
+        $categories[] = $cat['category'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,15 +74,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['comment_submit']) && 
 <title>ALL GAMES FOR YOU</title>
 <link rel="icon" type="image/png" sizes="128x128" href="imgandgifs/logo.svg">
 <style>
-/* ---------- CSS ---------- */
-body { margin:0; font-family:Poppins,sans-serif; background:linear-gradient(180deg,#6a1b9a,#4a0072); color:#fff; }
-header { display:flex; justify-content:space-between; align-items:center; padding:15px 30px;  background-image: url("imgandgifs/header_bg.png");background-repeat: no-repeat;
+body { 
+    margin:0; 
+    font-family:Poppins,sans-serif; 
+    background:linear-gradient(180deg,#6a1b9a,#4a0072); 
+    color:#fff; 
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-image: url("imgandgifs/header_bg.png");
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    display: flex;
-    align-items: center; }
-.logo { width:300px; height:auto; }
-.search-box input { padding:10px; border-radius:20px; border:none; }
+    flex-wrap: wrap;
+    gap: 10px;
+}
+header img.logo { max-width: 200px; height:auto; }
+.search-box { flex: 1 1 200px; margin:5px 10px; }
+.search-box input { width:100%; max-width:300px; min-width:120px; padding:10px; border-radius:20px; border:none; transition: all 0.3s ease; }
 .profile img { width:60px; border-radius:50%; cursor:pointer; }
 .container { display:grid; grid-template-columns:220px 1fr; gap:10px; height:calc(100vh-90px); padding:10px; }
 .sidebar { background:#7b1fa2; padding:20px; border-radius:15px; display:flex; flex-direction:column; gap:15px; }
@@ -80,11 +115,23 @@ form button { padding:5px 10px; border:none; border-radius:5px; background:#007b
 form button:hover { background:#0056b3; }
 .add-game-btn { padding:8px 12px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:15px; display:inline-block; text-decoration:none; }
 .add-game-btn:hover { background:#fb8c00; }
+
+@media(max-width: 768px){
+    .container { grid-template-columns: 1fr; height:auto; }
+    header { justify-content: center; }
+    .search-box input { max-width: 100%; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; gap: 8px; padding: 10px; }
+    .sidebar a { flex: 1 1 calc(50% - 10px); text-align: center; }
+    .game-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width: 480px){
+    .game-grid { grid-template-columns: 1fr; }
+    .profile img { width:50px; }
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <img src="imgandgifs/C4T.png" alt="logo" class="logo">
   <div class="search-box">
@@ -98,82 +145,46 @@ form button:hover { background:#0056b3; }
   <?php else: ?>
     <a href="auth.php"><img src="imgandgifs/login.png" alt="login"></a>
   <?php endif; ?>
-</div>
+  </div>
 </header>
 
 <div class="container">
   <nav class="sidebar">
     <h3>Categories</h3>
-    <a data-category="all" class="active">🌟 All</a>
-    <a data-category="fps">🎯 FPS</a>
-    <a data-category="adventure">⚔️ Adventure</a>
-    <a data-category="rpg">🧙‍♂️ RPG</a>
-    <a data-category="racing">🚗 Racing</a>
-    <a data-category="sports">🏟️ Sports</a>
-    <a data-category="arcade">👾 Arcade</a>
-    <a data-category="platform">👾 Platform games</a>
-    <a data-category="shooter">👾 Shooter games</a>
-    <a data-category="fighting">👾 Fighting games</a>
-    <a data-category="stealth">👾 Stealth games</a>
-    <a data-category="survival">👾 Survival games</a>
-    <a data-category="rhythm">👾 Rhythm games</a>
-    <a data-category="battleroyal">👾 Battle Royale games</a>
-    <a data-category="puzzle">👾 Puzzle games</a>
-    <a data-category="logical">👾 Logical game</a>
-    <a data-category="crpg">👾 CRPG</a>
-    <a data-category="mmorpg">👾 MMORPG</a>
-    <a data-category="roguelikes">👾 Roguelikes</a>
-    <a data-category="sandbox rpg">👾 Sandbox RPG</a>
-    <a data-category="simulation">👾 Simulation</a>
-    <a data-category="vehiclesimulation">👾 Vehicle simulation</a>
-    <a data-category="strategy">👾 Strategy</a>
-    <a data-category="moba">👾 Multiplayer online battle arena (MOBA)</a>
-    <a data-category=" towerdefense">👾 Tower defense</a>
-    <a data-category="wargame">👾 Wargame</a>
-    <a data-category="competitive">👾 Competitive</a>
-    <a data-category="boardgame">👾 Board game</a>
-    <a data-category="casinogame">👾 Casino game</a>
-    <a data-category="gachagame">👾 Gacha game</a>
-    <a data-category="horrorgame">👾 Horror game</a>
-    <a data-category="idlegame">👾 Idle game</a>
-    <a data-category="partygame">👾 Party game</a>
-    <a data-category="sandbox">👾 Sandbox</a>
+    <a data-category="all" class="active">ðŸŒŸ All</a>
+    <?php foreach($categories as $cat): ?>
+        <a data-category="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></a>
+    <?php endforeach; ?>
   </nav>
 
   <main class="main">
     <?php if(isset($_SESSION['user_id'])): ?>
-        <a href="add_games.php" class="add-game-btn">➕ Add New Game</a>
+        <a href="add_games.php" class="add-game-btn">âž• Add New Game</a>
     <?php endif; ?>
 
     <section class="featured">
-      <h2>🔥 Featured Game: Galaxy Blaster</h2>
+      <h2>ðŸ”¥ Featured Game: Galaxy Blaster</h2>
       <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
     </section>
 
     <section class="game-grid" id="gameGrid">
-    <?php
-    $games_sql = "SELECT * FROM games";
-    if($games_result = $conn->query($games_sql)){
-        if($games_result->num_rows > 0){
-            while($game = $games_result->fetch_assoc()){
-                $category = htmlspecialchars($game['category'] ?? 'all');
-                $title = htmlspecialchars($game['title']);
-                $desc = htmlspecialchars($game['description']);
-                $img = htmlspecialchars($game['main_image']);
-                $game_id = $game['game_id'];
-
-                // Make game clickable
-                echo "<div class='game-card' data-category='{$category}'>";
-                echo "<a href='game.php?id={$game_id}' style='text-decoration:none;color:inherit;'>";
-                echo "<img src='{$img}' alt='{$title}'>";
-                echo "<h3>{$title}</h3>";
-                echo "<p>{$desc}</p>";
-                echo "</a>";
-                echo "</div>";
-            }
-        } else { echo "<p>No games found.</p>"; }
-    } else { echo "<p>Error fetching games.</p>"; }
-    ?>
+    <?php if(!empty($games)): ?>
+        <?php foreach($games as $game): 
+            $categories_str = $game['categories'] ?? '';
+            $categories_array = explode(',', $categories_str);
+            $data_category = htmlspecialchars(implode('|', $categories_array)); // separate by | for JS filter
+        ?>
+        <div class="game-card" data-category="<?php echo $data_category; ?>">
+            <a href="game.php?id=<?php echo $game['game_id']; ?>" style="text-decoration:none;color:inherit;">
+                <img src="<?php echo htmlspecialchars($game['main_image']); ?>" alt="<?php echo htmlspecialchars($game['title']); ?>">
+                <h3><?php echo htmlspecialchars($game['title']); ?></h3>
+                <p><?php echo htmlspecialchars($game['description']); ?></p>
+            </a>
+        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No games found.</p>
+    <?php endif; ?>
     </section>
   </main>
 </div>
@@ -197,7 +208,8 @@ categoryLinks.forEach(link => {
         link.classList.add('active');
         const category = link.getAttribute('data-category');
         gameCards.forEach(card => {
-            card.style.display = (category==='all' || card.getAttribute('data-category')===category) ? 'block' : 'none';
+            const categories = card.getAttribute('data-category').split('|');
+            card.style.display = (category==='all' || categories.includes(category)) ? 'block' : 'none';
         });
     });
 });
