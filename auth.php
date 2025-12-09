@@ -1,17 +1,12 @@
 <?php
-// ---- SESSION SETUP (safe for cPanel) ----
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/tmp'));
 session_start();
-
-
 
 // ---- DATABASE CONNECTION ----
 $servername = "localhost";
-$db_username = "skdneoaa"; // your cPanel DB username
-$db_password = "t3YnVb0HN**40f"; // your DB password
+$db_username = "skdneoaa";
+$db_password = "t3YnVb0HN**40f";
 $database = "skdneoaa_Felhasznalok";
 
 $conn = new mysqli($servername, $db_username, $db_password, $database);
@@ -19,14 +14,46 @@ if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
 $login_error = '';
 $register_error = '';
-$register_success = '';
+$redirect = $_GET['redirect'] ?? 'index.php';
 
 // ---- LOGOUT ----
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $conn->prepare("UPDATE users SET remember_token=NULL WHERE user_id=?");
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+    }
     session_unset();
     session_destroy();
+    setcookie("rememberme", "", time()-3600, "/", "", true, true);
     header("Location: auth.php");
     exit();
+}
+
+// ---- AUTO LOGIN USING REMEMBER-ME ----
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['rememberme'])) {
+    $token_raw = $_COOKIE['rememberme'];
+    $stmt = $conn->prepare("SELECT user_id, username, role, profile_img, remember_token FROM users WHERE remember_token IS NOT NULL");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        if (!empty($row['remember_token']) && password_verify($token_raw, $row['remember_token'])) {
+            $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['role'] = $row['role'];
+            $_SESSION['profile_img'] = $row['profile_img'] ?? 'imgandgifs/login.png';
+
+            // Regenerate token for security
+            $new_token = bin2hex(random_bytes(32));
+            $new_hash = password_hash($new_token, PASSWORD_DEFAULT);
+            $stmt2 = $conn->prepare("UPDATE users SET remember_token=? WHERE user_id=?");
+            $stmt2->bind_param("si", $new_hash, $row['user_id']);
+            $stmt2->execute();
+            setcookie("rememberme", $new_token, time() + 30*24*60*60, "/", "", true, true);
+
+            break;
+        }
+    }
 }
 
 // ---- LOGIN ----
@@ -34,7 +61,7 @@ if (isset($_POST['login_submit'])) {
     $user = trim($_POST['username']);
     $pass = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT user_id, username, password_hash, role, profile_img FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT user_id, username, password_hash, role, profile_img FROM users WHERE username=?");
     $stmt->bind_param("s", $user);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -42,14 +69,21 @@ if (isset($_POST['login_submit'])) {
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         if (password_verify($pass, $row['password_hash'])) {
-            // ✅ Store user data in session
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
             $_SESSION['profile_img'] = $row['profile_img'] ?? 'imgandgifs/login.png';
 
-            // Redirect to homepage
-            header("Location: index.php");
+            if (isset($_POST['remember'])) {
+                $token_raw = bin2hex(random_bytes(32));
+                $token_hash = password_hash($token_raw, PASSWORD_DEFAULT);
+                $stmt2 = $conn->prepare("UPDATE users SET remember_token=? WHERE user_id=?");
+                $stmt2->bind_param("si", $token_hash, $row['user_id']);
+                $stmt2->execute();
+                setcookie("rememberme", $token_raw, time() + 30*24*60*60, "/", "", true, true);
+            }
+
+            header("Location: $redirect");
             exit();
         } else {
             $login_error = "Incorrect password.";
@@ -66,7 +100,6 @@ if (isset($_POST['register_submit'])) {
     $pass = $_POST['password'];
     $role = 'user';
 
-    // Check if username or email already exists
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE username=? OR email=?");
     $stmt->bind_param("ss", $user, $email);
     $stmt->execute();
@@ -79,14 +112,19 @@ if (isset($_POST['register_submit'])) {
         $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $user, $email, $hash, $role);
         if ($stmt->execute()) {
-            $register_success = "Registration successful! You can now log in.";
+            $_SESSION['user_id'] = $stmt->insert_id;
+            $_SESSION['username'] = $user;
+            $_SESSION['role'] = $role;
+            $_SESSION['profile_img'] = 'imgandgifs/login.png';
+            header("Location: $redirect");
+            exit();
         } else {
-            $register_error = "Registration failed. Please try again.";
+            $register_error = "Registration failed.";
         }
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,6 +140,7 @@ body {
   height: 100vh;
   margin: 0;
   color: #fff;
+  padding: 10px;
 }
 .auth-box {
   background: rgba(255,255,255,0.15);
@@ -109,79 +148,70 @@ body {
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  width: 350px;
-  text-align: center;
-}
-.auth-box h2 {
-  margin-top: 0;
-  color: #fff;
-}
-.auth-box input {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 1em;
+  max-width: 400px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.auth-box h2 { color: #fff; font-size: 1.5em; }
+.auth-box input {
+  width: 100%; padding: 12px; margin: 8px 0;
+  border: none; border-radius: 8px; outline: none;
+  font-size: 1em; box-sizing: border-box;
 }
 .auth-box button {
-  width: 100%;
-  padding: 10px;
-  background: #9c27b0;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: 0.3s;
+  width: 100%; padding: 12px; background: #9c27b0;
+  color: white; border: none; border-radius: 8px;
+  font-size: 1em; cursor: pointer; transition: 0.3s;
 }
 .auth-box button:hover { background: #ba68c8; }
-.toggle {
-  color: #ffd740;
-  cursor: pointer;
-  text-decoration: underline;
-  display: block;
-  margin-top: 10px;
-}
-.error { color: #ff5252; margin: 5px 0; }
-.success { color: #69f0ae; margin: 5px 0; }
-a.home-link {
-  display: block;
-  margin-top: 10px;
-  color: #fff;
-  text-decoration: underline;
-}
+.toggle { color: #ffd740; cursor: pointer; text-decoration: underline; margin-top: 10px; }
+.error { color: #ff5252; }
+.success { color: #69f0ae; }
+.home-link { color: #fff; text-decoration: underline; margin-top: 10px; display: block; }
 </style>
 </head>
 <body>
 
 <div class="auth-box">
+
     <!-- LOGIN FORM -->
     <div id="loginForm" <?php if(isset($_POST['register_submit'])) echo 'style="display:none"'; ?>>
         <h2>Login</h2>
         <?php if($login_error) echo "<p class='error'>$login_error</p>"; ?>
+
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
+
+            <label style="display:flex;align-items:center;gap:6px;margin:10px 0;">
+                <input type="checkbox" name="remember" value="1" style="width:auto;">
+                Remember me
+            </label>
+
             <button type="submit" name="login_submit">Login</button>
         </form>
+
         <p class="toggle" onclick="toggleForms()">Don't have an account? Register</p>
     </div>
 
     <!-- REGISTER FORM -->
     <div id="registerForm" <?php if(!isset($_POST['register_submit'])) echo 'style="display:none"'; ?>>
         <h2>Register</h2>
-        <?php 
-        if($register_error) echo "<p class='error'>$register_error</p>";
-        if($register_success) echo "<p class='success'>$register_success</p>";
-        ?>
+
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
+
+            <label style="display:flex;align-items:center;gap:6px;margin:10px 0;">
+                <input type="checkbox" name="remember" value="1" style="width:auto;">
+                Remember me
+            </label>
+
             <button type="submit" name="register_submit">Register</button>
         </form>
+
         <p class="toggle" onclick="toggleForms()">Already have an account? Login</p>
     </div>
 
@@ -189,7 +219,7 @@ a.home-link {
 </div>
 
 <script>
-function toggleForms(){
+function toggleForms() {
     const login = document.getElementById('loginForm');
     const register = document.getElementById('registerForm');
     login.style.display = login.style.display === 'none' ? 'block' : 'none';
