@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // ------------------ START SESSION ------------------
-ini_set('session.save_path', realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/tmp'));
+// Remove the custom session path — let PHP handle it
 session_start();
 
 // ------------------ DATABASE CONNECTION ------------------
@@ -66,6 +66,7 @@ if ($cat_result = $conn->query($cat_sql)) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,146 +74,244 @@ if ($cat_result = $conn->query($cat_sql)) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ALL GAMES FOR YOU</title>
 <link rel="icon" type="image/png" sizes="128x128" href="imgandgifs/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-body { 
-    margin:0; 
-    font-family:Poppins,sans-serif; 
-    background:linear-gradient(180deg,#6a1b9a,#4a0072); 
-    color:#fff; 
+:root {
+    --primary: #6a1b9a;
+    --secondary: #9c27b0;
+    --accent: #ba68c8;
+    --bg: #1a0a2b;
+    --card-bg: rgba(255,255,255,0.05);
+    --hover-bg: #7b1fa2;
+    --text-light: #fff;
+    --text-dark: #222;
 }
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+    color: var(--text-light);
+}
+
+/* BETTER HEADER BACKGROUND FIT */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-image: url("imgandgifs/header_bg.png");
+    display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+    padding:15px 20px;
+    background-image:url("imgandgifs/new_bg.png");
+    background-size: cover;         /* was already good */
+    background-position: top center; /* better alignment */
     background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    background-attachment: fixed;    /* smoother effect */
+    gap:10px; 
+    position:sticky; top:0; 
+    z-index:100; 
+    box-shadow:0 2px 10px rgba(0,0,0,0.3);
 }
-header img.logo { max-width: 200px; height:auto; }
-.search-box { flex: 1 1 200px; margin:5px 10px; }
-.search-box input { width:100%; max-width:300px; min-width:120px; padding:10px; border-radius:20px; border:none; transition: all 0.3s ease; }
-.profile img { width:60px; border-radius:50%; cursor:pointer; }
-.container { display:grid; grid-template-columns:220px 1fr; gap:10px; height:calc(100vh-90px); padding:10px; }
-.sidebar { background:#7b1fa2; padding:20px; border-radius:15px; display:flex; flex-direction:column; gap:15px; }
-.sidebar a { text-decoration:none; color:white; padding:8px 12px; border-radius:8px; display:block; }
-.sidebar a.active { background:#ba68c8; font-weight:bold; }
-.main { background:rgba(255,255,255,0.05); border-radius:15px; padding:20px; overflow-y:auto; }
-.featured { background:linear-gradient(135deg,#9c27b0,#7b1fa2); border-radius:15px; text-align:center; padding:15px; margin-bottom:25px; }
-.featured h2 { font-size:1.8em; margin:10px 0; }
-.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
-.game-card { background:#8e24aa; border-radius:12px; padding:10px; transition:0.3s; }
-.game-card:hover { background:#686ec8; transform:translateY(-5px); }
-.game-card img { width:100%; border-radius:10px; }
-.game-card h3 { margin:10px 0 5px; }
-.game-card p { font-size:0.9em; color:#e1bee7; }
-.comment { margin-left:10px; background:#f7f7f7; padding:8px; border-radius:8px; margin-bottom:8px; color:black; }
-form textarea { width:100%; padding:5px; border-radius:5px; border:1px solid #ccc; }
-form button { padding:5px 10px; border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer; }
-form button:hover { background:#0056b3; }
-.add-game-btn { padding:8px 12px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:15px; display:inline-block; text-decoration:none; }
+
+header img.logo { max-width:150px; height:auto; }
+
+.search-box { flex:1 1 200px; position:relative; }
+.search-box input {
+    width:100%; max-width:300px; min-width:120px; padding:10px 15px; border-radius:25px; border:none; outline:none; transition:0.3s; font-size:1em;
+}
+.search-box input:focus { transform:scale(1.02); box-shadow:0 0 10px var(--accent); }
+
+.profile img { width:60px; border-radius:50%; cursor:pointer; transition:0.3s; }
+.profile img:hover { transform:scale(1.1); }
+
+.container { display:grid; grid-template-columns:220px 1fr; gap:15px; padding:15px; height:calc(100vh - 90px); }
+
+/* --- rest of your CSS unchanged --- */
+.sidebar {
+    background:var(--hover-bg); padding:20px; border-radius:15px;
+    display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:calc(100vh - 120px);
+}
+.sidebar h3 { margin-bottom:10px; text-align:center; font-weight:600; }
+.sidebar a { text-decoration:none; color:var(--text-light); padding:8px 12px; border-radius:8px; display:block; transition:0.3s; }
+.sidebar a:hover, .sidebar a.active { background:var(--accent); font-weight:bold; }
+
+.main { background:var(--card-bg); border-radius:15px; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:20px; }
+
+.add-game-btn { padding:10px 15px; background:#ff9800; color:#fff; border-radius:10px; text-decoration:none; font-weight:600; transition:0.3s; align-self:flex-start; }
 .add-game-btn:hover { background:#fb8c00; }
 
-@media(max-width: 768px){
-    .container { grid-template-columns: 1fr; height:auto; }
-    header { justify-content: center; }
-    .search-box input { max-width: 100%; }
-    .sidebar { flex-direction: row; flex-wrap: wrap; gap: 8px; padding: 10px; }
-    .sidebar a { flex: 1 1 calc(50% - 10px); text-align: center; }
-    .game-grid { grid-template-columns: 1fr 1fr; }
+/* FEATURED */
+.featured {
+    background:linear-gradient(135deg, var(--secondary), var(--primary)); border-radius:15px; padding:15px; text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3);
 }
-@media(max-width: 480px){
-    .game-grid { grid-template-columns: 1fr; }
-    .profile img { width:50px; }
+.featured h2 { font-size:1.8em; margin-bottom:10px; }
+.featured p { font-size:1em; color:#f3e5f5; }
+
+/* GAME CARDS */
+.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
+.game-card {
+    background:var(--hover-bg); border-radius:12px; padding:10px; display:flex; flex-direction:column; justify-content:space-between;
+    transition:0.3s; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.game-card:hover { transform:translateY(-5px); background:var(--accent); }
+.game-card img { width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
+.game-card h3 { margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.game-card p { font-size:0.9em; color:#e1bee7; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+
+/* Responsive */
+@media(max-width: 1024px) { .container { grid-template-columns:180px 1fr; } }
+@media(max-width: 768px) {
+    .container { grid-template-columns:1fr; height:auto; }
+    .sidebar { flex-direction:row; overflow-x:auto; padding:10px; gap:8px; max-height:unset; }
+    .sidebar a { flex:0 0 auto; text-align:center; }
+    .game-grid { grid-template-columns:1fr 1fr; }
+}
+@media(max-width: 480px) {
+    .game-grid { grid-template-columns:1fr; }
+    header { flex-direction:column; align-items:flex-start; }
+    .search-box input { width:100%; }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <img src="imgandgifs/C4T.png" alt="logo" class="logo">
-  <div class="search-box">
-    <input id="searchInput" type="text" placeholder="Search games...">
-  </div>
-  <div class="profile">
-  <?php if(isset($_SESSION['user_id'])): ?>
-    <a href="profile.php">
-      <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'imgandgifs/login.png'); ?>" alt="profile">
-    </a>
-  <?php else: ?>
-    <a href="auth.php"><img src="imgandgifs/login.png" alt="login"></a>
-  <?php endif; ?>
-  </div>
+    <img src="imgandgifs/C4T.png" alt="logo" class="logo">
+
+    <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Search games...">
+    </div>
+
+    <!-- NEW: PROFILE + MESSAGES BUTTON WRAPPER -->
+    <div class="profile" style="display:flex; align-items:center; gap:15px;">
+
+        <?php if(isset($_SESSION['user_id'])): ?>
+
+            
+            <!-- MESSAGES BUTTON -->
+        <a href="<?php echo isset($_SESSION['user_id']) ? 'message.php' : 'auth.php?redirect=message.php'; ?>" class="msg-btn"style="
+        background: #ba68c8;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        transition: 0.3s;
+">
+            Message
+</a>
+
+
+            <!-- PROFILE PIC -->
+            <a href="profile.php">
+                <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'imgandgifs/login.png'); ?>" 
+                     alt="profile">
+            </a>
+
+        <?php else: ?>
+
+            <a href="auth.php"><img src="imgandgifs/login.png" alt="login"></a>
+
+        <?php endif; ?>
+    </div>
+
 </header>
 
 <div class="container">
-  <nav class="sidebar">
-    <h3>Categories</h3>
-    <a data-category="all" class="active">ðŸŒŸ All</a>
-    <?php foreach($categories as $cat): ?>
-        <a data-category="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></a>
-    <?php endforeach; ?>
-  </nav>
-
-  <main class="main">
-    <?php if(isset($_SESSION['user_id'])): ?>
-        <a href="add_games.php" class="add-game-btn">âž• Add New Game</a>
-    <?php endif; ?>
-
-    <section class="featured">
-      <h2>ðŸ”¥ Featured Game: Galaxy Blaster</h2>
-      <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
-    </section>
-
-    <section class="game-grid" id="gameGrid">
-    <?php if(!empty($games)): ?>
-        <?php foreach($games as $game): 
-            $categories_str = $game['categories'] ?? '';
-            $categories_array = explode(',', $categories_str);
-            $data_category = htmlspecialchars(implode('|', $categories_array)); // separate by | for JS filter
-        ?>
-        <div class="game-card" data-category="<?php echo $data_category; ?>">
-            <a href="game.php?id=<?php echo $game['game_id']; ?>" style="text-decoration:none;color:inherit;">
-                <img src="<?php echo htmlspecialchars($game['main_image']); ?>" alt="<?php echo htmlspecialchars($game['title']); ?>">
-                <h3><?php echo htmlspecialchars($game['title']); ?></h3>
-                <p><?php echo htmlspecialchars($game['description']); ?></p>
-            </a>
-        </div>
+    <nav class="sidebar">
+        <h3>Categories</h3>
+        <a data-category="all" class="active">All</a>
+        <?php foreach($categories as $cat): ?>
+            <a data-category="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></a>
         <?php endforeach; ?>
-    <?php else: ?>
-        <p>No games found.</p>
-    <?php endif; ?>
-    </section>
-  </main>
+    </nav>
+
+    <main class="main">
+        <?php if(isset($_SESSION['user_id'])): ?>
+            <a href="add_games.php" class="add-game-btn">Add New Game</a>
+        <?php endif; ?>
+
+        <section class="featured">
+            <h2>ðŸ”¥ Featured Game: Galaxy Blaster</h2>
+            <p>Fly through galaxies, battle alien fleets, and save humanity in this high-speed space shooter!</p>
+        </section>
+
+        <section class="game-grid" id="gameGrid">
+            <?php foreach($games as $game): 
+                $categories_str = $game['categories'] ?? '';
+                $categories_array = explode(',', $categories_str);
+                $data_category = htmlspecialchars(implode('|', $categories_array)); 
+            ?>
+            <div class="game-card" data-category="<?php echo $data_category; ?>" data-game-id="<?php echo $game['game_id']; ?>">
+                <a href="game.php?id=<?php echo $game['game_id']; ?>" style="text-decoration:none;color:inherit;">
+                    <img src="<?php echo htmlspecialchars($game['main_image']); ?>" alt="<?php echo htmlspecialchars($game['title']); ?>">
+                    <h3><?php echo htmlspecialchars($game['title']); ?></h3>
+                    <p><?php echo htmlspecialchars($game['description']); ?></p>
+                </a>
+            </div>
+            <?php endforeach; ?>
+        </section>
+    </main>
 </div>
 
 <script>
 const searchInput = document.getElementById('searchInput');
-const gameCards = document.querySelectorAll('.game-card');
 const categoryLinks = document.querySelectorAll('.sidebar a');
+let allGames = [];
 
+document.querySelectorAll('.game-card').forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    const description = card.querySelector('p').textContent.toLowerCase();
+    const categories = card.dataset.category.split('|');
+    allGames.push({ element: card, title, description, categories });
+});
+
+let debounceTimer;
 searchInput.addEventListener('input', () => {
-    const val = searchInput.value.toLowerCase();
-    gameCards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        card.style.display = title.includes(val) ? 'block' : 'none';
-    });
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(filterGames, 150);
 });
 
-categoryLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        categoryLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        const category = link.getAttribute('data-category');
-        gameCards.forEach(card => {
-            const categories = card.getAttribute('data-category').split('|');
-            card.style.display = (category==='all' || categories.includes(category)) ? 'block' : 'none';
-        });
+categoryLinks.forEach(link => link.addEventListener('click', () => {
+    categoryLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    filterGames();
+}));
+
+function filterGames() {
+    const val = searchInput.value.toLowerCase();
+    const activeCategory = document.querySelector('.sidebar a.active')?.dataset.category || 'all';
+
+    allGames.forEach(game => {
+        const matchesCategory = (activeCategory === 'all' || game.categories.includes(activeCategory));
+        const matchesSearch = game.title.includes(val) || game.description.includes(val);
+        game.element.style.display = (matchesCategory && matchesSearch) ? 'block' : 'none';
     });
-});
+}
+
+async function refreshGames() {
+    try {
+        const res = await fetch('fetch_games.php?json=1');
+        const games = await res.json();
+        games.forEach(game => {
+            let existing = allGames.find(g => g.element.dataset.gameId == game.game_id);
+            if(!existing) {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.dataset.gameId = game.game_id;
+                card.dataset.category = game.categories ? game.categories.split(',').join('|') : '';
+                card.innerHTML = `<a href="game.php?id=${game.game_id}" style="text-decoration:none;color:inherit;">
+                    <img src="${game.main_image}" alt="${game.title}" loading="lazy">
+                    <h3>${game.title}</h3>
+                    <p>${game.description}</p>
+                </a>`;
+                document.getElementById('gameGrid').appendChild(card);
+                allGames.push({ element: card, title: game.title.toLowerCase(), description: game.description.toLowerCase(), categories: game.categories ? game.categories.split(',') : [] });
+            }
+        });
+        filterGames();
+    } catch (e) { console.error('Failed to refresh games:', e); }
+}
+
+setInterval(refreshGames, 5000);
 </script>
+
 </body>
 </html>
