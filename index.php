@@ -90,6 +90,7 @@ if ($cat_result = $conn->query($cat_sql)) {
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
     font-family: 'Poppins', sans-serif;
+    //background: linear-gradient(135deg, #6e4975, #904abb);
     background: linear-gradient(180deg, var(--primary), var(--secondary));
     color: var(--text-light);
 }
