@@ -83,8 +83,8 @@ if ($cat_result = $conn->query($cat_sql)) {
     --accent: #ba68c8;
     --bg: #1a0a2b;
     --card-bg: rgba(255,255,255,0.05);
-    --hover-bg: #7b1fa2;
-    --text-light: #fff;
+    --hover-bg: #4b1363;
+    --text-light: #ebe6ed;
     --text-dark: #222;
 }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -133,7 +133,7 @@ header img.logo { max-width:150px; height:auto; }
 
 .main { background:var(--card-bg); border-radius:15px; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:20px; }
 
-.add-game-btn { padding:10px 15px; background:#ff9800; color:#fff; border-radius:10px; text-decoration:none; font-weight:600; transition:0.3s; align-self:flex-start; }
+.add-game-btn { padding:10px 15px; background:#db8e1d; color:#ebe6ed; border-radius:10px; text-decoration:none; font-weight:600; transition:0.3s; align-self:flex-start; }
 .add-game-btn:hover { background:#fb8c00; }
 
 /* FEATURED */
@@ -142,7 +142,7 @@ header img.logo { max-width:150px; height:auto; }
     box-shadow:0 4px 15px rgba(0,0,0,0.3);
 }
 .featured h2 { font-size:1.8em; margin-bottom:10px; }
-.featured p { font-size:1em; color:#f3e5f5; }
+.featured p { font-size:1em; color:#99899c; }
 
 /* GAME CARDS */
 .game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
@@ -153,7 +153,7 @@ header img.logo { max-width:150px; height:auto; }
 .game-card:hover { transform:translateY(-5px); background:var(--accent); }
 .game-card img { width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
 .game-card h3 { margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.game-card p { font-size:0.9em; color:#e1bee7; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+.game-card p { font-size:0.9em; color:#b397b8; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
 
 /* Responsive */
 @media(max-width: 1024px) { .container { grid-template-columns:180px 1fr; } }
@@ -187,7 +187,7 @@ header img.logo { max-width:150px; height:auto; }
             
             <!-- MESSAGES BUTTON -->
         <a href="<?php echo isset($_SESSION['user_id']) ? 'message.php' : 'auth.php?redirect=message.php'; ?>" class="msg-btn"style="
-        background: #ba68c8;
+        background: #774280;
         padding: 10px 14px;
         border-radius: 10px;
         font-weight: 600;
