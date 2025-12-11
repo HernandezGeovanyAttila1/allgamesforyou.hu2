@@ -78,15 +78,14 @@ if ($cat_result = $conn->query($cat_sql)) {
 
 <style>
 :root { 
-    --primary:   #69097b;
-    --secondary: #0d080e;
-    --accent: #6d3c77;
-    --bg: #220d39;
-    --card-bg: rgba(255,255,255,0.05);
-    --hover-bg: #1a0a1c;
+    --primary: #1b171e;
+    --secondary: #410b4b;
+    --accent: #9557a1;
+    --bg: #000000;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --hover-bg: #3f0c48;
     --text-light: #d9cddb;
     --text-dark: #222;
-}
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
     font-family: 'Poppins', sans-serif;
