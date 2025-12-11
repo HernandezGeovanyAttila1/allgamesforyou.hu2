@@ -203,7 +203,7 @@ header img.logo { max-width:150px; height:auto; }
 
             <!-- PROFILE PIC -->
             <a href="profile.php">
-                <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'imgandgifs/login.png'); ?>" 
+                <img src="<?php echo htmlspecialchars($_SESSION['profile_img'] ?? 'imgandgifs/moving_login.gif'); ?>" 
                      alt="profile">
             </a>
 
