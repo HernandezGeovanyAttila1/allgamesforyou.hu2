@@ -80,7 +80,7 @@ if ($cat_result = $conn->query($cat_sql)) {
 :root {   
     --primary:  #25033d;
     --secondary: #6d0f7d;
-    --accent: #99899c;
+    --accent: #9557a1;
     --bg: #1f0c33;
     --card-bg: rgba(255,255,255,0.05);
     --hover-bg: #50135b;
