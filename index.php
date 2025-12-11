@@ -139,6 +139,14 @@ header img.logo { max-width:150px; height:auto; }
 
 /* FEATURED */
 .featured {
+    /* --primary: #25033d;
+    --secondary: #6d0f7d;
+    --accent: #99899c;
+    --bg: #1f0c33;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --hover-bg: #50135b;
+    --text-light: #d9cddb;
+    --text-dark: #222; */
     background:linear-gradient(135deg, var(--secondary), var(--primary)); border-radius:15px; padding:15px; text-align:center;
     box-shadow:0 4px 15px rgba(0,0,0,0.3);
 }
