@@ -209,7 +209,7 @@ header img.logo { max-width:150px; height:auto; }
 
         <?php else: ?>
 
-            <a href="auth.php"><img src="imgandgifs/login.png" alt="login"></a>
+            <a href="auth.php"><img src="imgandgifs/moving_login.gif" alt="login"></a>
 
         <?php endif; ?>
     </div>
