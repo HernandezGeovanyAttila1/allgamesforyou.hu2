@@ -77,13 +77,13 @@ if ($cat_result = $conn->query($cat_sql)) {
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root {   
-    --primary:  #25033d;
-    --secondary: #6d0f7d;
-    --accent: #9557a1;
-    --bg: #1f0c33;
+:root { 
+    --primary:   #69097b;
+    --secondary: #0d080e;
+    --accent: #6d3c77;
+    --bg: #220d39;
     --card-bg: rgba(255,255,255,0.05);
-    --hover-bg: #50135b;
+    --hover-bg: #1a0a1c;
     --text-light: #d9cddb;
     --text-dark: #222;
 }
