@@ -77,14 +77,14 @@ if ($cat_result = $conn->query($cat_sql)) {
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --primary: #6a1b9a;
-    --secondary: #9c27b0;
-    --accent: #ba68c8;
-    --bg: #1a0a2b;
+:root {   
+    --primary:  #25033d;
+    --secondary: #6d0f7d;
+    --accent: #99899c;
+    --bg: #1f0c33;
     --card-bg: rgba(255,255,255,0.05);
-    --hover-bg: #4b1363;
-    --text-light: #ebe6ed;
+    --hover-bg: #50135b;
+    --text-light: #d9cddb;
     --text-dark: #222;
 }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -139,14 +139,7 @@ header img.logo { max-width:150px; height:auto; }
 
 /* FEATURED */
 .featured {
-    /* --primary: #25033d;
-    --secondary: #6d0f7d;
-    --accent: #99899c;
-    --bg: #1f0c33;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --hover-bg: #50135b;
-    --text-light: #d9cddb;
-    --text-dark: #222; */
+   
     background:linear-gradient(135deg, var(--secondary), var(--primary)); border-radius:15px; padding:15px; text-align:center;
     box-shadow:0 4px 15px rgba(0,0,0,0.3);
 }
