@@ -1,103 +1,38 @@
 <?php
-// ------------------ DEBUGGING ------------------
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors',1);
 error_reporting(E_ALL);
-
-// ------------------ START SESSION ------------------
 session_start();
 
-// ------------------ AUTO-LOGIN (remember-me) ------------------
-$servername = "localhost";
-$db_username = "skdneoaa";
-$db_password = "t3YnVb0HN**40f";
-$database = "skdneoaa_Felhasznalok";
+/* ---------- DB ---------- */
+$conn = new mysqli(
+    "localhost",
+    "skdneoaa",
+    "t3YnVb0HN**40f",
+    "skdneoaa_Felhasznalok"
+);
+if ($conn->connect_error) die("DB connection failed");
 
-$conn = new mysqli($servername, $db_username, $db_password, $database);
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
-}
-
-// helper
-function set_remember_cookie_index($value) {
-    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
-    setcookie("rememberme", $value, time() + 86400 * 30, "/", "", $secure, true);
-}
-
-if (!isset($_SESSION['user_id']) && isset($_COOKIE['rememberme'])) {
-    if (strpos($_COOKIE['rememberme'], ':') !== false) {
-        list($selector, $token) = explode(':', $_COOKIE['rememberme']);
-        $stmt = $conn->prepare("SELECT user_id, username, role, profile_img, token_validator FROM users WHERE token_selector=? LIMIT 1");
-        $stmt->bind_param("s", $selector);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        if ($res && $res->num_rows === 1) {
-            $row = $res->fetch_assoc();
-            if (!empty($row['token_validator']) && password_verify($token, $row['token_validator'])) {
-                $_SESSION['user_id'] = $row['user_id'];
-                $_SESSION['username'] = $row['username'];
-                $_SESSION['role'] = $row['role'];
-                $_SESSION['profile_img'] = $row['profile_img'] ?? "/imgandgifs/login.png";
-                // rotate token
-                $new_selector = bin2hex(random_bytes(9));
-                $new_token = bin2hex(random_bytes(33));
-                $new_validator = password_hash($new_token, PASSWORD_DEFAULT);
-                $stmt2 = $conn->prepare("UPDATE users SET token_selector=?, token_validator=? WHERE user_id=?");
-                $stmt2->bind_param("ssi", $new_selector, $new_validator, $row['user_id']);
-                $stmt2->execute();
-                set_remember_cookie_index($new_selector . ":" . $new_token);
-            }
-        }
-    }
-}
-
-// ------------------ HANDLE LOGOUT ------------------
-if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-    session_unset();
-    session_destroy();
-    setcookie("rememberme", "", time() - 3600, "/", "", false, true);
-    header("Location: index.php");
-    exit();
-}
-
-// ------------------ HANDLE COMMENT SUBMISSION ------------------
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['comment_submit']) && isset($_SESSION['user_id'])) {
-    $game_id = isset($_POST['game_id']) ? intval($_POST['game_id']) : 0;
-    $user_id = $_SESSION['user_id'];
-    $content = trim($_POST['content']);
-
-    if ($game_id > 0 && !empty($content)) {
-        $stmt = $conn->prepare("INSERT INTO comments (game_id, user_id, content, created_at) VALUES (?, ?, ?, NOW())");
-        if ($stmt) {
-            $stmt->bind_param("iis", $game_id, $user_id, $content);
-            $stmt->execute();
-            $stmt->close();
-        }
-    }
-}
-
-// ------------------ FETCH GAMES WITH CATEGORIES ------------------
+/* ---------- ALL GAMES ---------- */
 $games = [];
-$games_sql = "SELECT g.*, GROUP_CONCAT(gc.category SEPARATOR ',') AS categories
-              FROM games g
-              LEFT JOIN game_categories gc ON g.game_id = gc.game_id
-              GROUP BY g.game_id";
-if ($result = $conn->query($games_sql)) {
-    while ($row = $result->fetch_assoc()) {
-        $games[] = $row;
-    }
-} else {
-    die("Error fetching games: " . $conn->error);
-}
+$sql = "
+SELECT g.*, GROUP_CONCAT(gc.category SEPARATOR ', ') AS categories
+FROM games g
+LEFT JOIN game_categories gc ON g.game_id = gc.game_id
+GROUP BY g.game_id
+";
+$res = $conn->query($sql);
+while($row = $res->fetch_assoc()) $games[] = $row;
 
-// ------------------ FETCH ALL CATEGORIES ------------------
-$categories = [];
-$cat_sql = "SELECT DISTINCT category FROM game_categories ORDER BY category ASC";
-if ($cat_result = $conn->query($cat_sql)) {
-    while ($cat = $cat_result->fetch_assoc()) {
-        $categories[] = $cat['category'];
-    }
-}
+/* ---------- POPULAR (random for now) ---------- */
+$popular = array_slice($games, 0, 4);
+
+/* ---------- TRENDING (next 3) ---------- */
+$trending = array_slice($games, 4, 3);
+
+/* ---------- NEW RELEASES ---------- */
+usort($games, fn($a,$b)=>strtotime($b['created_at'])-strtotime($a['created_at']));
+$new = array_slice($games, 0, 4);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -260,5 +195,3 @@ body{font-family:Poppins,sans-serif;background:#fff;color:#111}
 
 </body>
 </html>
-
-
