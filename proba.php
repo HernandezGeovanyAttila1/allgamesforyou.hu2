@@ -1,4 +1,53 @@
 <?php
+
+session_start();
+
+/* ================= REMEMBER ME AUTO LOGIN ================= */
+
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
+
+    $token = $_COOKIE['remember_token'];
+
+    $stmt = $conn->prepare("
+        SELECT u.user_id, u.username, u.profile_img
+        FROM users u
+        INNER JOIN user_tokens t ON u.user_id = t.user_id
+        WHERE t.token = ? AND t.expires_at > NOW()
+        LIMIT 1
+    ");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($user = $result->fetch_assoc()) {
+        // Login user
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['profile_img'] = $user['profile_img'];
+
+        // Rotate token (security)
+        $newToken = bin2hex(random_bytes(32));
+        $stmt = $conn->prepare("
+            UPDATE user_tokens
+            SET token = ?, expires_at = DATE_ADD(NOW(), INTERVAL 30 DAY)
+            WHERE user_id = ?
+        ");
+        $stmt->bind_param("si", $newToken, $user['user_id']);
+        $stmt->execute();
+
+        setcookie(
+            "remember_token",
+            $newToken,
+            time() + (86400 * 30),
+            "/",
+            "",
+            true,
+            true
+        );
+    }
+}
+
+
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 session_start();
@@ -195,3 +244,4 @@ body{font-family:Poppins,sans-serif;background:#fff;color:#111}
 
 </body>
 </html>
+
