@@ -1,17 +1,10 @@
 src="imgandgifs/C4T.gif" This is how to put gifs and img in to the website so please follow this for my sanity thank you 
 
-ELSŐDLEGES: COMMENT KIJAVÍTÁSA!
+
 
 Feladatok:
-    - A sorrendet beállítani (a leguújabbak legyenek legelöl)
-    - Report rendszer
-    - Ban rendszer
     - Ai? talán (a képekhez)
-    - Delete rendszeresen működjön (ha törlődik akkor minden megy vele)
-    - Barátok hozzáadása (profilba + dolog (idk man))
-    - Ha a profilban vagyunk, a commentre nyomunk akkor oda dobjon minket a commentre és a játékra
-    - ...
+   
 
-adatbázisba
 
-CREATE TABLE favourites ( id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, game_id INT NOT NULL, UNIQUE(user_id, game_id) );
+
