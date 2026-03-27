@@ -1,0 +1,93 @@
+
+
+
+
+
+
+
+SZAKDOLGOZAT
+
+
+
+
+
+BUDAPESTI KOMPLEX SZAKKÉPZÉSI CENTRUM 
+WEISS MANFRÉD SZAKGIMNÁZIUMA, 
+SZAKKÖZÉPISKOLÁJA ÉS KOLLÉGIUMA
+
+
+
+
+
+
+ALLGAMESFORYOU.HU
+
+
+
+
+
+
+
+
+
+
+					
+
+
+Tartalom
+TARTALOM
+BEVEZETÉS……………………………………………………………………………………………………………………………………..1
+ZÁRÓDOLGOZATUNK TÉMÁJA, MILYEN FUNKCIÓKAT TARTALMAZ?……………………………………………….2
+MIÉRT VIDEÓJÁTÉKOK…………………………………………………………………………………………………………………….3
+MIÉRT ’ALLGAMESFORYOU.HU’ A DOMAIN NÉV?…………………………………………………………………………..3
+KIKNEK AJÁNLOTT AZ OLDAL?………………………………………………………………………………………………………...3
+HOGYAN MÁS, MINT A TÖBBI?……………………………………………………………………………………………………….3
+FEJLESZTŐI DOKUMENTÁCIÓ………………………………………………………………………………………………………….4
+MILYEN SZOFTVEREKET HASZNÁLTUNK AZ ELKÉSZÍTÉSHEZ?…………………………………………………………..5
+MILYEN PROGRAMOZÁSI NYELVEKET HASZNÁLTUNK?…………………………………………………………………...6
+MILYEN SZOFTVEREKET HASZNÁLTUNK AZ ELKÉSZÍTÉSHEZ?……………………………………………………………5
+FEJLESZTŐI HARDWARE / HARDVER (RÉSZLET)……………………………………………………………………………….5
+AZ ADATBÁZIS…………………………………………………………………………………………………………………………………5
+A ’’ tábla………………………………………..………………………………………………………………………………………5
+A ’’ tábla………………………………………..………………………………………………………………………………………5
+A ’’ tábla……………………………………..…………………………………………………………………………………………5
+A ’’ tábla……………………………………..…………………………………………………………………………………………5
+A ’’ tábla…………………………………..……………………………………………………………………………………………5
+A ’’ tábla…………………………………..……………………………………………………………………………………………5
+A ’’ tábla…………………………………..……………………………………………………………………………………………5
+A ’’ tábla………………………………..………………………………………………………………………………………………5
+A ’’ tábla………………………………..………………………………………………………………………………………………5
+A ’’ tábla……………………………..…………………………………………………………………………………………………5
+A ’’ tábla………………………………..………………………………………………………………………………………………5
+A ’’ tábla…………………………..……………………………………………………………………………………………………5
+ALGORITMUSOK WEBLAPON:……………………………………………………………………………………………………………………………………5
+Regisztráció …………………………………………………………………………………………………………………………..5
+Bejelentkezés ………………………………………………………………………………………………………………………..5
+Más felhasználók megtekintése …………………………………………………………………………………………...5
+Képek feltöltése …………………………………………………………………………………………………………………….5
+A WEBOLDAL DIZÁJN-JA………………………………………………………………………………………………………...5
+TESZT DOKUMENTÁCIÓ………………………………………………………………………………………………………………….5
+
+Bevezetés
+Záródolgozat Témája, milyen funkciókat foglal magába?
+
+Záródolgozatnak egy hasznos és nyitott weboldalt gondoltunk, mint például egy videójátékokat bemutató oldalt. Hogy hogyan is kell ezt érteni? A felhasználók regisztráció után játékokat tudnak felfedezni, értékelni, véleményezni és feltölthetik a saját vagy a nekik tetszett játékokat (képekkel).
+
+Miért pont videójátékok?
+
+Egy hétvégi napon unatkoztunk és úgy döntöttünk, hogy le kéne ülni videójátékot játszani, de nem tudtunk választani és utána akartunk nézni, hogy milyennel kéne elütni az időt, sajnálatos módon, több órányi kutakodás után nem jutottunk dűlőre mert nem volt egy rendes oldal ami kigyűjtötte volna a videójátékokat és azoknak a véleményeiket.
+
+
+Miért ’allgamesforyou.hu’ a domain név?
+
+A weboldalunkhoz elsőnek ’retrogamesforyou.hu’ lett volna, de mivel ez a domain név foglalt volt így változtatnunk kellett,de egyben meg kellett őriznie azt a gondolatot, hogy „Az oldalt látogató személyeknek ugyanúgy meg tudjanak ismerkedni az újonnan és a régen létrehozott játékokkal.”. Ezért maradtunk az ’http://allgamesforyou.hu/’-nál, ami szerintunk jobban kifejti a lényegét az oldalunknak.
+
+
+Kiknek szánjuk az oldalunkat?
+
+Őszintén szólva szinte bárkinek lehet ajánlani akik játszanak vagy érdeklik a videójátékok. Ez egy olyan oldal ahol tetszés szerint lehet játékokat találni és feltölteni. A kategóriák változatosak, ami mindenkinek kedvező. Véleményünk szerint nagyon sok fiatal és fiatal felnőtt van a világon akik nem játszanak változatos játékokkal és leragadnak egy darabnál, amivel nem csak az a baj, hogy nem akarnak új dolgokat felfedezni hanem ezáltal nem is fognak új személyekkel találkozni vagy barátkozni. Maga az, hogy egész nap a gépek előtt ülnek és csak játszanak, de ezzel nem is szocializálódnak, pedig más emberektől (főleg ha azok külföldiek) sokat lehet tanulni és érdekességeket hallani ami a játékok és az internet segítségével megkönnyebíti az emberek dolgát.
+
+
+
+
+
