@@ -1,0 +1,68 @@
+1. OLDAL: Játéktervezet és Felhasználói Élmény
+1.1 Projekt Áttekintés
+Játék címe: CAT VS DOGS (Potato Edition)
+
+Műfaj: Top-down Arena Survival / Roguelike Shooter
+
+Platform: Web-alapú (Asztali és Mobil)
+
+Állapot: Még fejlesztés alatt (Work in Progress)
+
+A projekt célja egy olyan optimalizált, böngészőben futtatható akciójáték létrehozása, amely gyengébb hardvereken („Potato Edition”) is stabilan fut, miközben modern játékelemeket (fejlődési rendszer, globális ranglista) vonultat fel.
+
+1.2 Játékmenet és Célkitűzések
+A játékos egy macska karaktert irányít, akinek feladata a folyamatosan erősödő kutya-hullámok túlélése. A játék során a fő cél a pontgyűjtés és a túlélés.
+
+Hullám-rendszer: A nehézség szintenként emelkedik. Minden körben egyre több ellenség jelenik meg (Képlet: 10 + aktuális kör × 5).
+
+Fejlődési rendszer (Mutációk): Tapasztalati pontok (XP) gyűjtésével a játékos szintet lép, ekkor három véletlenszerű „Mutáció” (fejlesztés) közül választhat (pl. sebzésnövelés, gyorsabb tüzelés, életerő-visszatöltés).
+
+Supply Bunker (Bolt): Bizonyos fázisok után megnyílik a bolt, ahol a játékos „War Bonds” (hadikötvények) felhasználásával vásárolhat felszerelést, például elsősegélycsomagot vagy fegyverolajat.
+
+1.3 Vizuális Világ és Interfész
+A játék egyedi „Neon/Retro” esztétikát használ:
+
+Sötét háttér neonrózsaszín, kék és zöld kiemelésekkel.
+
+CRT Effekt: A nosztalgikus hatás érdekében egy CSS-alapú váltottsoros (scanline) réteg fedi a képernyőt, szimulálva a régi játéktermi monitorokat.
+
+Dinamikus HUD: Valós időben követhető az életerő, a szint, a pontszám és az aktuális kör állapota.
+
+2. OLDAL: Technikai Architektúra és Implementáció
+2.1 Technológiai Stack
+A fejlesztés során a „Vanilla” technológiákra helyeztem a hangsúlyt a maximális kompatibilitás és sebesség érdekében:
+
+Frontend: HTML5 Canvas és tiszta JavaScript (nem használtam külső grafikus motorokat).
+
+Backend: PHP (szerveroldali logika) és MySQL (adatbázis).
+
+Audio: Web Audio API (procedurális hanggenerálás, nem igényel hangfájlokat).
+
+2.2 Backend és Adatkezelés
+A játék egy robusztus PHP alapú háttérrendszert használ a pontszámok mentésére és lekérdezésére.
+
+Adatbázis Kapcsolat: A workinggame_highscores tábla tárolja a játékosneveket, az elért pontszámokat és a dátumot.
+
+API Funkcionalitás (workinggame_api.php):
+
+GET kérés: Lekéri a globális ranglista első három helyezettjét.
+
+POST kérés: Biztonságos módon beküldi az új pontszámokat a szerverre, ügyelve a felhasználói nevek megfelelő kezelésére (maximum 3 karakteres rövidítés).
+
+2.3 Technikai Optimalizáció (Potato Edition)
+Mivel a játék célja a gyengébb gépeken való futtatás, az alábbi megoldásokat alkalmaztam:
+
+Object Pooling: A lövedékek és ellenségek nem jönnek létre és semmisülnek meg folyamatosan (ami lassítaná a memóriakezelést), hanem egy „Pool” osztály segítségével újrahasznosításra kerülnek.
+
+Geometriai Renderelés: Képfájlok helyett a Canvas API primitív alakzatait (körök, vonalak) használom, ami drasztikusan csökkenti a betöltési időt és a GPU terhelését.
+
+Reszponzív Skálázás: Egy egyedi eseménykezelő figyel az ablakméret változására, és a képarány megtartása mellett mindig kitölti a rendelkezésre álló teret.
+
+2.4 Jövőbeli Tervek
+A projekt jelenleg fejlesztés alatt áll. A további tervek között szerepel:
+
+Több típusú ellenfél és egyedi Boss-harcok bevezetése.
+
+Bejelentkezési rendszer bővítése a PHP munkamenetek (session) mélyebb integrációjával.
+
+További pályák és akadályok hozzáadása a taktika színesítésére.
