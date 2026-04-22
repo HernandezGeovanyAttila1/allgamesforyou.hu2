@@ -1,0 +1,69 @@
+1. Szerveroldali Logika (PHP)
+A PHP szakasz felelős a biztonságért, a munkamenet-kezelésért és az adatok előkészítéséért.
+
+Hibakezelés és Munkamenet (Session)
+Hibakeresés: A fájl elején az ini_set és error_reporting parancsok engedélyezik a hibák megjelenítését, ami fejlesztői környezetben elengedhetetlen a debugginghoz.
+
+Munkamenet javítás: A session_start() után egy automatikus javító algoritmus ellenőrzi a felhasználó profilképét. Ha régi vagy hibás útvonalat talál, azt automatikusan frissíti az új animált GIF-re (moving_login.gif).
+
+"Emlékezz rám" (Remember Me) Rendszer
+A rendszer egy biztonságos, kétfaktoros token-alapú hitelesítést használ:
+
+Selector és Validator: A süti (cookie) nem a jelszót tárolja, hanem egy véletlenszerű választót (selector) és egy validátort.
+
+Token rotáció: Minden bejelentkezéskor a régi tokent törli a rendszer és újat generál, így védve a felhasználót a munkamenet-eltérítés (session hijacking) ellen.
+
+URL Titkosítás és Rövidítő
+Titkosítás: Az encryptUrl és decryptUrl függvények egy XOR alapú műveletet és Base64 kódolást használnak a SECRET_KEY kulccsal. Ez elrejti a valódi URL-t a látogatók elől.
+
+Link rövidítő: A generateRandomLink funkció egy 6 karakteres véletlen kódot generál, amivel tisztább, megoszthatóbb linkek hozhatók létre.
+
+Adatbázis Műveletek (SQL)
+A játékok lekérése egy komplex SQL lekérdezéssel történik:
+
+Kategóriák: A GROUP_CONCAT segítségével egyetlen mezőbe gyűjti az összes kategóriát, ami a játékhoz tartozik.
+
+Értékelések: Kiszámolja az átlagos csillagszámot és az értékelések darabszámát.
+
+Személyre szabás: Ellenőrzi, hogy az adott játék a felhasználó kedvencei között van-e, és automatikusan kihagyja azokat a játékokat, amelyeket a felhasználó tiltólistára tett.
+
+2. Felhasználói Felület és Stílus (CSS)
+A weboldal esztétikáját a Glassmorphism (üveghatás) és a dinamikus effektek határozzák meg.
+
+Téma és Színkezelés
+Dinamikus Témák: A CSS változókat (--bg-color, --text-color) használ, ami lehetővé teszi a váltást a "Sötét" (Dark) és "Világos" (Bright) módok között.
+
+Mesh Gradient: A háttérben egy animált, radiális gradiensekből álló réteg (.mesh-gradient) mozog, ami modern, futurisztikus hatást kelt.
+
+Layout és Reszponzivitás
+Grid Rendszer: A játékok kártyái egy flexibilis gridbe rendeződnek, amely mobiltelefonon 2 oszlopos, asztali gépen pedig több oszlopos elrendezésre vált.
+
+Navigáció: A felső menüsor "ragadós" (sticky), tehát görgetés közben is látható marad. Tartalmaz egy keresősávot és egy felhasználói panelt.
+
+Oldalsáv (Sidebar): Egy fentről legördülő kategória-választó menü, amely blur (homályosítás) effekttel fedi le a tartalmat.
+
+3. Interaktivitás (JavaScript)
+A kliensoldali scriptek teszik lehetővé a dinamikus működést frissítés nélkül.
+
+Élő Keresés
+A JavaScript figyeli a keresőmezőt, és valós időben szűri a játékokat. Amint a felhasználó gépel, a script elrejti azokat a kártyákat, amelyek címe nem egyezik a beírt szöveggel.
+
+Vizuális Effektek és Menükezelés
+Görgetés figyelés: A script érzékeli a görgetés irányát. Lefelé görgetéskor elrejti a navigációt a nagyobb játéktér érdekében, felfelé görgetéskor pedig újra megjeleníti.
+
+Hamburger Menü: Mobil nézetben a menü egy ikonba tömörül, amely animáltan nyílik meg.
+
+Hírek és Kategóriák: Külön függvények (openSidebar, openNews) kezelik az átfedő ablakok (overlay) animációit és állapotait.
+
+Csillag Értékelés
+A felhasználói felületen interaktív csillagok találhatók, amelyek hover (egér ráhúzás) hatására világítanak, visszajelzést adva a felhasználónak az értékelés előtt.
+
+4. Biztonsági Megjegyzések
+XSS elleni védelem: A PHP kód a kiíratáskor (pl. játékleírásoknál) figyel a biztonságra, bár a további fejlesztésnél javasolt a htmlspecialchars() következetes használata.
+
+SQL Injection: A kód előkészített lekérdezéseket (Prepared Statements) használ, ami megvédi az adatbázist a rosszindulatú SQL injekcióktól.
+
+Titkos kulcs: A SECRET_KEY jelenleg statikus, éles környezetben ajánlott ezt egy külső környezeti változóban (.env) tárolni.
+
+Összegzés
+Ez a fájl egy professzionális szintű játékplatform alapja. A kód jól strukturált, különválasztja a logikát a designtól, és nagy hangsúlyt fektet a felhasználói élményre (gyorsaság, animációk, sötét mód). A "Remember Me" rendszer és az URL titkosítás kiemeli a biztonságra való törekvést.
