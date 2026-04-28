@@ -1,57 +1,109 @@
 Based on the structure of your thesis, here is the table of contents reformatted using a decimal numbering system (e.g., 1.2):
+BEVEZETÉS   
 
-**TARTALOM**
 
-1. [cite_start]**BEVEZETÉS** [cite: 1]
-2. [cite_start]**ZÁRÓDOLGOZATUNK TÉMÁJA, MILYEN FUNKCIÓKAT TARTALMAZ?** [cite: 1]
-3. [cite_start]**MIÉRT VIDEÓJÁTÉKOK** [cite: 1]
-4. [cite_start]**MIÉRT ’ALLGAMESFORYOU.HU’ A DOMAIN NÉV?** [cite: 1]
-5. [cite_start]**KIKNEK SZÁNJUK AZ OLDALUNKAT** [cite: 1]
-6. [cite_start]**HOGYAN ÁLL A PROJEKT** [cite: 1]
-7. [cite_start]**A PROJEKT JÖVŐJE** [cite: 1]
-8. [cite_start]**HOGYAN MÁS, MINT A TÖBBI?** [cite: 1]
-9. [cite_start]**FEJLESZTŐI DOKUMENTÁCIÓ** [cite: 1]
-    * [cite_start]9.1 MILYEN SZOFTVEREKET HASZNÁLTUNK AZ ELKÉSZÍTÉSHEZ? [cite: 1]
-    * [cite_start]9.2 MILYEN PROGRAMOZÁSI NYELVEKET HASZNÁLTUNK? [cite: 1]
-10. [cite_start]**AZ ADATBÁZIS** [cite: 1]
-    * [cite_start]10.1 A ’user’ tábla [cite: 1]
-    * [cite_start]10.2 A ’comments’ tábla [cite: 1]
-    * [cite_start]10.3 A ’workinggame_highscore’ tábla [cite: 1]
-    * [cite_start]10.4 A ’game_categories’ tábla [cite: 1]
-    * [cite_start]10.5 A ’games’ tábla [cite: 1]
-    * [cite_start]10.6 A ’game_ratings’ tábla [cite: 1]
-    * [cite_start]10.7 A ’favourites’ tábla [cite: 1]
-    * [cite_start]10.8 A ’reports’ tábla [cite: 1]
-11. [cite_start]**PROGRAMALGORITMUSOK:** [cite: 1]
-    * [cite_start]11.1 Regisztráció és Bejelentkezés [cite: 1]
-    * [cite_start]11.2 Index (Főoldal) [cite: 1]
-12. [cite_start]**A WEBOLDAL DIZÁJN-JA** [cite: 1]
-13. [cite_start]**TESZT DOKUMENTÁCIÓ** [cite: 1]
-    * [cite_start]13.1 profile.php [cite: 1]
-    * [cite_start]13.2 admin.php [cite: 1]
-    * [cite_start]13.3 about.php [cite: 1]
-    * [cite_start]13.4 add_games.php [cite: 1]
-    * [cite_start]13.5 auth.php [cite: 1]
-    * [cite_start]13.6 check_db.php [cite: 1]
-    * [cite_start]13.7 customersupport.php [cite: 1]
-    * [cite_start]13.8 db.php [cite: 1]
-    * [cite_start]13.9 debug.log [cite: 1]
-    * [cite_start]13.10 edit_game.php [cite: 1, 2]
-    * [cite_start]13.11 fetch_game.php [cite: 2]
-    * [cite_start]13.12 game.php [cite: 2]
-    * [cite_start]13.13 games.php [cite: 2]
-    * [cite_start]13.14 migrate_comment.php [cite: 2]
-    * [cite_start]13.15 comment.php [cite: 2]
-    * [cite_start]13.16 news_proxy.php [cite: 2]
-    * [cite_start]13.17 reset_password.php [cite: 2]
-    * [cite_start]13.18 toggle_favourite.php [cite: 2]
-    * [cite_start]13.19 until.php [cite: 2]
-    * [cite_start]13.20 workinggame_api.php [cite: 2]
-    * [cite_start]13.21 workinggame.php [cite: 2]
-    * [cite_start]13.22 update_schema.php [cite: 2]
-1. OLDAL: Játéktervezet és Felhasználói Élmény
-1.1 Projekt Áttekintés
-Játék címe: CAT VS DOGS (Potato Edition)
+ZÁRÓDOLGOZATUNK TÉMÁJA, MILYEN FUNKCIÓKAT TARTALMAZ?   
+
+
+MIÉRT VIDEÓJÁTÉKOK   
+
+
+MIÉRT ’ALLGAMESFORYOU.HU’ A DOMAIN NÉV?   
+
+
+KIKNEK SZÁNJUK AZ OLDALUNKAT   
+
+
+HOGYAN ÁLL A PROJEKT   
+
+
+A PROJEKT JÖVŐJE   
+
+
+HOGYAN MÁS, MINT A TÖBBI?   
+
+
+FEJLESZTŐI DOKUMENTÁCIÓ   
+
+9.1 MILYEN SZOFTVEREKET HASZNÁLTUNK AZ ELKÉSZÍTÉSHEZ?   
+
+9.2 MILYEN PROGRAMOZÁSI NYELVEKET HASZNÁLTUNK?   
+
+
+AZ ADATBÁZIS   
+
+10.1 A ’user’ tábla   
+
+10.2 A ’comments’ tábla   
+
+10.3 A ’workinggame_highscore’ tábla   
+
+10.4 A ’game_categories’ tábla   
+
+10.5 A ’games’ tábla   
+
+10.6 A ’game_ratings’ tábla   
+
+10.7 A ’favourites’ tábla   
+
+10.8 A ’reports’ tábla   
+
+
+PROGRAMALGORITMUSOK:   
+
+11.1 Regisztráció és Bejelentkezés   
+
+11.2 Index (Főoldal)   
+
+
+A WEBOLDAL DIZÁJN-JA   
+
+
+TESZT DOKUMENTÁCIÓ   
+
+13.1 profile.php   
+
+13.2 admin.php   
+
+13.3 about.php   
+
+13.4 add_games.php   
+
+13.5 auth.php   
+
+13.6 check_db.php   
+
+13.7 customersupport.php   
+
+13.8 db.php   
+
+13.9 debug.log   
+
+13.10 edit_game.php   
+
+13.11 fetch_game.php   
+
+13.12 game.php   
+
+13.13 games.php   
+
+13.14 migrate_comment.php   
+
+13.15 comment.php   
+
+13.16 news_proxy.php   
+
+13.17 reset_password.php   
+
+13.18 toggle_favourite.php   
+
+13.19 until.php   
+
+13.20 workinggame_api.php   
+
+13.21 workinggame.php   
+
+13.22 update_schema.php
 
 Műfaj: Top-down Arena Survival / Roguelike Shooter
 
