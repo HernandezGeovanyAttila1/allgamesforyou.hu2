@@ -7,10 +7,7 @@ if (!empty($_SESSION['is_banned'])) {
     die("You are banned and cannot upload games.");
 }
 
-$servername = "localhost";
-$db_username = "skdneoaa";
-$db_password = "t3YnVb0HN**40f";
-$database    = "skdneoaa_Felhasznalok";
+
 
 $conn_check = new mysqli($servername, $db_username, $db_password, $database);
 if (!$conn_check->connect_error && !isset($_SESSION['user_id']) && isset($_COOKIE['rememberme'])) {
