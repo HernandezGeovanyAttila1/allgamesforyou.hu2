@@ -1,9 +1,6 @@
 <?php
 session_start();
-$servername = "localhost";
-$db_username = "skdneoaa";
-$db_password = "t3YnVb0HN**40f";
-$database = "skdneoaa_Felhasznalok";
+
 
 console.log("FETCH START");
 
